@@ -26,7 +26,7 @@ Um controle de presença de raid para guild, pensado para o oficial que faz a ch
 
 Não tem build, não tem dependência. É um arquivo só.
 
-1. Baixe o `Presenca-deRaid.html`
+1. Baixe o `index.html`
 2. Abra no navegador (duplo clique resolve)
 3. Marque as presenças e exporte quando terminar
 
@@ -66,7 +66,8 @@ A classe fica numa linha sozinha (maiúsculas ou não). Cada jogador começa com
 
 ```
 Qu-rum/
-└── Presenca-deRaid.html   # app completo (HTML + CSS + JS + estado inicial)
+├── index.html    # app completo (HTML + CSS + JS + estado inicial)
+└── vercel.json   # config pra servir estático na Vercel
 ```
 
 Tudo mora no mesmo arquivo. O estado inicial vai num `<script type="application/json">` para sobreviver a reloads e facilitar o compartilhamento.
