@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Presença de Raid</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style id="css">
+/* VOICE: oficial de raid fazendo a chamada — direto, rápido de marcar
+   IDEA: o livro de chamada da guild: cada raid é uma bolinha que você marca
+   PICTURE: a grade de bolinhas por jogador, pintada com a cor da classe
+   COLOUR and TYPE: faixa carmesim de estandarte, fundo branco/noite, cores de classe; Chakra Petch + Inter
+   LAYOUT: estandarte com ações, números-chave, chamada à esquerda, análise ao lado */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121015);--ink:light-dark(#17131a,#efe9f1);--mut:light-dark(#655e6b,#a79eac);--pan:light-dark(#f4f2f5,#1c1921);--line:light-dark(#e5e1e8,#2d2833);--band:light-dark(#b01d33,#7a1325);--pri:light-dark(#b01d33,#d6334b);--low:light-dark(#cf1f2d,#ff6170);--lowbg:light-dark(#fdebed,#2e1418);--ok:light-dark(#18804f,#4bcf8d);--pip:light-dark(#e3dfe7,#332d3a)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.band{padding:clamp(24px,3.4vw,44px) max(4vw,16px)}
+.hero{background:var(--band);color:#fff}
+.hwrap{max-width:1240px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-end;justify-content:space-between}
+.ttl{flex:1 1 380px}
+.gname{font:700 clamp(30px,4.4vw,50px)/1.05 'Chakra Petch',sans-serif;background:none;border:0;border-bottom:2px dashed transparent;color:#fff;width:100%;padding:0 0 2px}
+.gname:hover,.gname:focus{border-bottom-color:rgba(255,255,255,.55);outline:none}
+.sub{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.meta{margin:10px 0 0;opacity:.85;font-size:15px}
+.hbtn,.wsel{min-height:44px;padding:0 14px;border-radius:10px;border:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.1);color:#fff;font-weight:600;font-size:15px}
+.wsel{font-size:16px;max-width:240px}.wsel option{color:#17131a;background:#fff}
+.hbtn:hover:not(:disabled){background:rgba(255,255,255,.2)}
+.hbtn.pri{background:#fff;color:#8f1528;border-color:#fff}
+.hero :focus-visible{outline-color:#fff}
+.acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-end}
+.st{flex-basis:100%;text-align:right;margin:0;font-size:14px;opacity:.9}
+main{max-width:1240px;margin:0 auto;padding:22px max(4vw,16px) 64px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-block:1px solid var(--line)}
+.kpi{padding:14px 16px;border:0;border-left:1px solid var(--line);background:none;text-align:left;display:grid;gap:2px}
+.kpi:first-child{border-left:0;padding-left:0}
+button.kpi:hover{background:var(--pan)}
+.kpi b{font:700 clamp(28px,3.4vw,40px)/1 'Chakra Petch',sans-serif;font-variant-numeric:tabular-nums}
+.kpi span{font-weight:600}.kpi small{color:var(--mut);font-size:13px}
+.kpi.w b{color:var(--low)}.kpi.g b{color:var(--ok)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:16px 0 6px;background:var(--bg);z-index:5}
+@media(min-width:900px){.tools{position:sticky;top:0}}
+.in{min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:16px}
+#q{flex:1 1 170px}#fc{max-width:200px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);font-weight:600;font-size:14px;white-space:nowrap}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip em{font-style:normal;opacity:.6;margin-left:4px}
+.btn{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--pan);color:var(--ink);font-weight:600;font-size:15px;white-space:nowrap}
+.btn:hover:not(:disabled){border-color:var(--mut)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.btn.dng{color:var(--low);background:none}
+.btn.sm{min-height:36px;padding:0 12px;font-size:14px}
+.hint{color:var(--mut);font-size:14px;margin:4px 0 12px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:start;margin-top:10px}
+@media(max-width:1020px){.layout{grid-template-columns:minmax(0,1fr)}}
+.grp{margin-bottom:26px}
+.grp>header{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:8px 0;border-bottom:2px solid var(--c,var(--ink))}
+.grp h3{font:700 21px/1.1 'Chakra Petch',sans-serif;margin:0}
+.gm{color:var(--mut);font-size:14px;margin-right:auto}
+.sw{width:14px;height:14px;border-radius:4px;background:var(--c);flex:none;display:inline-block}
+.row{display:grid;grid-template-columns:150px minmax(0,1fr) 92px 40px;gap:10px;align-items:center;padding:10px 6px;border-bottom:1px solid var(--line);border-left:3px solid transparent}
+.row.warn{border-left-color:var(--low);background:linear-gradient(90deg,var(--lowbg),transparent 55%)}
+.who{display:grid}
+.nm{font-weight:600;font-size:16px;border:1px solid transparent;background:none;padding:6px 8px;border-radius:8px;width:100%}
+.nm:hover{border-color:var(--line)}.nm:focus{border-color:var(--pri);outline:none;background:var(--bg)}
+.cl{display:none;font-size:13px;color:var(--mut);padding-left:9px}
+.flat .cl{display:flex;gap:6px;align-items:center}.flat .cl .sw{width:9px;height:9px}
+.days{display:flex;flex-wrap:wrap;gap:8px 16px}
+.day{display:grid;gap:5px}
+.dn{background:none;border:0;padding:0;font-size:12px;font-weight:600;color:var(--mut);text-align:left}
+.dn b{color:var(--ink)}.dn:hover b{text-decoration:underline}
+.pips{display:flex;gap:3px}
+.pip{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--pip);background:transparent;padding:0;transition:background .15s,transform .15s}
+.pip.on{background:var(--c);border-color:var(--c)}
+.pip:hover{transform:translateY(-2px)}
+.day.zero .pip{border-style:dashed}
+@media(pointer:coarse){.pip{width:28px;height:28px}}
+.lw{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--mut)}
+.lw button{width:22px;height:22px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--mut);padding:0;line-height:1;font-size:15px}
+.lw.has span{color:var(--low);font-weight:700}
+.sum{display:grid;gap:3px;justify-items:end;text-align:right}
+.sum b{font:700 23px/1 'Chakra Petch',sans-serif;font-variant-numeric:tabular-nums}
+.sum b.full{color:var(--ok)}.sum b.bad{color:var(--low)}
+.sum small{color:var(--mut);font-size:13px;font-variant-numeric:tabular-nums}
+.meter{width:100%;height:6px;background:var(--pip);border-radius:3px;overflow:hidden}.meter i{display:block;height:100%;background:var(--c)}
+.badge{font-weight:700;font-size:12px;color:#fff;background:var(--low);padding:2px 8px;border-radius:999px;white-space:nowrap}
+.more{width:44px;height:44px;border-radius:10px;border:1px solid transparent;background:none;color:var(--mut);font-size:20px;line-height:1}
+.more:hover{border-color:var(--line);color:var(--ink)}
+@media(max-width:760px){.row{grid-template-columns:minmax(0,1fr) auto 44px}.who{grid-area:1/1}.sum{grid-area:1/2}.more{grid-area:1/3}.days{grid-column:1/-1;grid-row:2}}
+.empty{padding:40px 20px;text-align:center;border:1px dashed var(--line);border-radius:14px}
+.empty h3{font:700 22px 'Chakra Petch',sans-serif;margin:0 0 6px}
+aside{display:grid;gap:4px}
+@media(min-width:1021px){aside{position:sticky;top:76px;max-height:calc(100vh - 90px);overflow:auto}}
+.panel{padding:14px 0 16px;border-top:1px solid var(--line)}.panel:first-child{border-top:0;padding-top:0}
+.panel h4{font:700 17px 'Chakra Petch',sans-serif;margin:0 0 10px}
+.bar{display:grid;grid-template-columns:minmax(0,118px) minmax(0,1fr) 42px;gap:8px;align-items:center;font-size:14px;padding:3px 0}
+.bar span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr{height:10px;background:var(--pip);border-radius:5px;overflow:hidden}.tr i{display:block;height:100%;background:var(--c,var(--pri))}
+.bar em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.pl{display:grid;grid-template-columns:10px minmax(0,1fr) auto;gap:8px;align-items:center;width:100%;min-height:40px;border:0;background:none;padding:4px 6px;border-radius:8px;text-align:left;font-size:14px}
+.pl:hover{background:var(--pan)}.pl .sw{width:10px;height:10px}
+.pl small{display:block;color:var(--mut);font-size:12px}
+.pl b{color:var(--low);font-variant-numeric:tabular-nums}.pl b.m{color:var(--mut)}
+.ov{position:fixed;inset:0;background:rgba(12,6,14,.55);display:grid;place-items:center;padding:16px;z-index:50}
+.ov[hidden]{display:none}
+.dlg{background:var(--bg);color:var(--ink);border-radius:16px;max-width:580px;width:100%;max-height:92vh;overflow:auto;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.dlg h2{font:700 26px/1.1 'Chakra Petch',sans-serif;margin:0 0 14px}
+.dlg h3{font:700 18px 'Chakra Petch',sans-serif;margin:18px 0 4px}
+.fld{display:grid;gap:6px;margin-bottom:12px;font-size:14px;font-weight:600}
+textarea.in{padding:10px 12px;min-height:200px;font:14px/1.45 ui-monospace,Menlo,Consolas,monospace;resize:vertical;width:100%}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:15px}
+.opt input{width:20px;height:20px;margin-top:2px;accent-color:var(--pri);flex:none}
+.drow{display:grid;grid-template-columns:minmax(0,1fr) 90px auto;gap:8px;margin-bottom:8px}
+.dact{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:18px}
+.dact .sp{flex:1}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);opacity:0;pointer-events:none;transition:.25s;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;z-index:60;font-weight:600;max-width:min(92vw,520px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:600px){.hbtn,.wsel{min-height:40px;padding:0 11px;font-size:14px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi:nth-child(3){border-left:0;padding-left:0}.kpi{border-top:1px solid var(--line)}.kpi:nth-child(-n+2){border-top:0}.st{text-align:left}.acts{justify-content:flex-start}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body><div id="root"></div><script type="application/json" id="state">{"title":"Presença de Raid","savedAt":0,"cur":"w1","classes":["Bruxo","Bárbaro","Cacique","Cavaleiro da Morte","Caçador","Ceifador","Encantador","Ladino","Necromante","Xamã"],"weeks":[{"id":"w1","label":"Semana de 23/11","days":[{"n":"Seg","m":6},{"n":"Ter","m":6},{"n":"Qua","m":4}],"players":[{"id":"mzztv3x","name":"Solaron","cls":"Bruxo","a":[6,6,4],"l":[0,0,0]},{"id":"q2ng9xs","name":"Clowgirl","cls":"Bruxo","a":[0,4,0],"l":[0,1,0]},{"id":"mnxawju","name":"Wsp","cls":"Bárbaro","a":[6,6,4],"l":[0,3,1]},{"id":"b0jelb6","name":"Liangzzi","cls":"Bárbaro","a":[6,6,4],"l":[0,0,0]},{"id":"2stsp81","name":"Aodebiao","cls":"Bárbaro","a":[6,6,0],"l":[0,0,0]},{"id":"0a9kvqh","name":"Uuu","cls":"Bárbaro","a":[6,6,0],"l":[0,0,0]},{"id":"0vctb8s","name":"Rain","cls":"Bárbaro","a":[6,5,0],"l":[0,0,0]},{"id":"rmfx43l","name":"Oldphill","cls":"Bárbaro","a":[0,6,0],"l":[0,0,0]},{"id":"5xcwecc","name":"Crasique","cls":"Cacique","a":[6,6,4],"l":[0,0,0]},{"id":"6k790a9","name":"Czz","cls":"Cacique","a":[6,6,4],"l":[0,0,0]},{"id":"i49makh","name":"Leone","cls":"Cacique","a":[6,6,4],"l":[0,0,0]},{"id":"cx9qoqm","name":"Yagaoxd","cls":"Cacique","a":[5,6,4],"l":[1,0,0]},{"id":"74haja9","name":"Lucasrusso","cls":"Cacique","a":[6,4,3],"l":[0,0,1]},{"id":"czqmdt6","name":"Alifxi","cls":"Cacique","a":[6,6,0],"l":[0,0,0]},{"id":"7dbrygf","name":"Anttt","cls":"Cacique","a":[6,6,0],"l":[0,0,0]},{"id":"zno6eix","name":"Maranata","cls":"Cacique","a":[6,6,0],"l":[0,0,0]},{"id":"jcdsd75","name":"Youla","cls":"Cacique","a":[6,6,0],"l":[0,0,0]},{"id":"k47pl25","name":"Kaguhia","cls":"Cacique","a":[0,6,0],"l":[0,0,0]},{"id":"qeawdh4","name":"Sun","cls":"Cacique","a":[6,0,0],"l":[0,0,0]},{"id":"6xpyril","name":"Natuamae","cls":"Cacique","a":[0,4,0],"l":[0,0,0]},{"id":"6yv0qwv","name":"Xxyukioxxx","cls":"Cacique","a":[0,0,4],"l":[0,0,0]},{"id":"yj3a8km","name":"Centablg","cls":"Cavaleiro da Morte","a":[6,6,4],"l":[0,0,0]},{"id":"0mlnfo0","name":"Cmkaxah","cls":"Cavaleiro da Morte","a":[6,6,0],"l":[0,1,0]},{"id":"ejg1jvm","name":"Exeggcute","cls":"Cavaleiro da Morte","a":[6,6,0],"l":[0,0,0]},{"id":"3ljbste","name":"Horonvil","cls":"Cavaleiro da Morte","a":[6,6,0],"l":[0,0,0]},{"id":"zwjtuff","name":"Lingyoo","cls":"Cavaleiro da Morte","a":[6,6,0],"l":[0,0,0]},{"id":"m3pe3di","name":"Novodk","cls":"Cavaleiro da Morte","a":[6,6,0],"l":[0,0,0]},{"id":"gdhtwmb","name":"Swqs","cls":"Cavaleiro da Morte","a":[6,6,0],"l":[0,0,0]},{"id":"jpx19z2","name":"Luanbodao","cls":"Caçador","a":[6,6,4],"l":[0,0,1]},{"id":"m2ljfe9","name":"Plzinxx","cls":"Caçador","a":[6,6,4],"l":[0,0,0]},{"id":"k61cke2","name":"Megicula","cls":"Ceifador","a":[6,6,4],"l":[0,0,0]},{"id":"eye3j9k","name":"Manocais","cls":"Ceifador","a":[2,6,4],"l":[2,6,4]},{"id":"ltyltnm","name":"Brutaly","cls":"Ceifador","a":[6,6,0],"l":[0,0,0]},{"id":"10n76dv","name":"Necalli","cls":"Ceifador","a":[6,6,0],"l":[0,0,0]},{"id":"4b5ungu","name":"Langres","cls":"Ceifador","a":[3,6,0],"l":[0,3,0]},{"id":"htjqozd","name":"Fatuo","cls":"Encantador","a":[6,6,4],"l":[0,0,0]},{"id":"wyqu7ei","name":"Luhhdj","cls":"Encantador","a":[6,6,4],"l":[0,0,0]},{"id":"hoygu4x","name":"Oxuum","cls":"Encantador","a":[6,6,4],"l":[0,0,0]},{"id":"1tgae4u","name":"Voidcloth","cls":"Encantador","a":[6,6,4],"l":[0,0,0]},{"id":"ejent6f","name":"Welliton","cls":"Encantador","a":[6,6,4],"l":[0,0,0]},{"id":"c3mf39j","name":"Maciel","cls":"Encantador","a":[6,6,3],"l":[0,1,1]},{"id":"n9kbht9","name":"Akkk","cls":"Encantador","a":[6,6,0],"l":[0,1,0]},{"id":"dlkxhtj","name":"Adestraelf","cls":"Encantador","a":[6,6,0],"l":[0,0,0]},{"id":"3hkhj7v","name":"Favor","cls":"Encantador","a":[6,6,0],"l":[0,0,0]},{"id":"44t3lju","name":"Honggee","cls":"Encantador","a":[6,6,0],"l":[0,0,0]},{"id":"bdr9r1l","name":"Kuudere","cls":"Encantador","a":[0,6,4],"l":[0,0,0]},{"id":"vwfnxwh","name":"Hybfff","cls":"Encantador","a":[2,6,0],"l":[2,2,0]},{"id":"g2h8usm","name":"Spoikaboga","cls":"Encantador","a":[0,5,0],"l":[0,0,0]},{"id":"z727uu7","name":"Texto","cls":"Encantador","a":[0,5,0],"l":[0,0,0]},{"id":"96oc7zw","name":"Vvvvvv","cls":"Encantador","a":[4,0,0],"l":[0,0,0]},{"id":"cbg6cgx","name":"Godhell","cls":"Ladino","a":[6,6,4],"l":[0,0,0]},{"id":"0ciuc5d","name":"Joones","cls":"Ladino","a":[6,6,4],"l":[0,0,0]},{"id":"stl9h9g","name":"Onehitwin","cls":"Ladino","a":[6,6,4],"l":[0,0,0]},{"id":"fyb5ajh","name":"Shadowkat","cls":"Ladino","a":[6,6,4],"l":[0,0,0]},{"id":"e6y776r","name":"Taitus","cls":"Ladino","a":[6,6,4],"l":[0,0,0]},{"id":"owf6hmk","name":"Tigrez","cls":"Ladino","a":[6,6,4],"l":[0,0,0]},{"id":"n9w91de","name":"Matosay","cls":"Ladino","a":[5,6,4],"l":[0,0,0]},{"id":"k2j1y2t","name":"Capeta","cls":"Ladino","a":[6,6,0],"l":[0,0,0]},{"id":"eu3zpsg","name":"Atm","cls":"Ladino","a":[6,5,0],"l":[0,0,0]},{"id":"28bsyu5","name":"Kazulixo","cls":"Ladino","a":[0,6,4],"l":[0,0,0]},{"id":"aewmzz2","name":"Reativo","cls":"Ladino","a":[5,4,0],"l":[0,1,0]},{"id":"fsxea9d","name":"Fardais","cls":"Ladino","a":[0,0,4],"l":[0,0,0]},{"id":"rwr2zg4","name":"Herbertyx","cls":"Necromante","a":[6,6,4],"l":[0,0,0]},{"id":"9b4639s","name":"Lingboo","cls":"Necromante","a":[6,6,0],"l":[1,3,0]},{"id":"rrg28ph","name":"Mlkdopo","cls":"Necromante","a":[6,6,0],"l":[1,3,0]},{"id":"hejslcv","name":"Angelicais","cls":"Necromante","a":[6,6,0],"l":[1,1,0]},{"id":"h6bknd4","name":"Donkja","cls":"Necromante","a":[2,6,0],"l":[1,1,0]},{"id":"if2dev1","name":"Necatrom","cls":"Necromante","a":[0,6,0],"l":[0,2,0]},{"id":"7jo09sv","name":"Xamaxxx","cls":"Xamã","a":[6,6,4],"l":[1,2,0]},{"id":"onyzsnj","name":"Mengpo","cls":"Xamã","a":[6,6,4],"l":[0,0,1]},{"id":"vtxz81u","name":"Cronos","cls":"Xamã","a":[6,6,4],"l":[0,0,0]},{"id":"dwynexs","name":"Gank","cls":"Xamã","a":[6,6,4],"l":[0,0,0]},{"id":"3ubmpjl","name":"Riquellx","cls":"Xamã","a":[6,6,4],"l":[0,0,0]},{"id":"pbakaly","name":"Caloteira","cls":"Xamã","a":[5,6,4],"l":[2,0,0]},{"id":"sq5z162","name":"Ginny","cls":"Xamã","a":[5,6,4],"l":[0,0,0]},{"id":"mwa8mrx","name":"Kingtroup","cls":"Xamã","a":[5,6,3],"l":[1,0,0]},{"id":"py7wn52","name":"Cunhatan","cls":"Xamã","a":[6,6,0],"l":[0,1,0]},{"id":"r485k7f","name":"Inory","cls":"Xamã","a":[6,6,0],"l":[0,0,0]},{"id":"f4vmn17","name":"Mruu","cls":"Xamã","a":[6,6,0],"l":[0,0,0]},{"id":"2ppxiin","name":"Sherry","cls":"Xamã","a":[3,6,0],"l":[1,1,0]},{"id":"i3g517n","name":"Acuragay","cls":"Xamã","a":[2,6,0],"l":[2,6,0]},{"id":"axd2a1h","name":"Deusanegra","cls":"Xamã","a":[3,0,4],"l":[1,0,3]}]}]}</script><script id="app">
+{
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+const uid=()=>Math.random().toString(36).slice(2,9);
+const KEY='guild-raid-presenca';
+let S=JSON.parse($('#state').textContent);
+const BASE=S.savedAt||0;
+let dirty=false,ART=null,DL=null,local=false,hist=[],fut=[];
+try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(d&&d.base===BASE&&d.state&&JSON.stringify(d.state)!==JSON.stringify(S)){S=d.state;dirty=true}}catch(e){}
+const ui={wk:S.cur,q:'',cls:'',flt:'all',sort:'cls'};
+const CC={'bruxo':'#8b3fd1','barbaro':'#d0462c','cacique':'#118a72','cavaleiro da morte':'#5d7189','cacador':'#3a9a3a','ceifador':'#b0283f','encantador':'#2f7fe0','ladino':'#d68800','necromante':'#6a52d8','xama':'#0b9fb3'};
+const ccol=c=>CC[norm(c)]||`hsl(${[...String(c)].reduce((h,ch)=>(h*31+ch.charCodeAt(0))>>>0,7)%360} 55% 46%)`;
+const SMALL=['da','de','do','das','dos','e'];
+const titleCase=s=>String(s).trim().toLowerCase().split(/\s+/).map((w,i)=>i&&SMALL.includes(w)?w:w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
+const W=()=>S.weeks.find(w=>w.id===ui.wk)||S.weeks[S.weeks.length-1];
+const tot=w=>w.days.reduce((a,d)=>a+d.m,0);
+const pres=p=>p.a.reduce((a,b)=>a+(b||0),0);
+const lows=p=>p.l.reduce((a,b)=>a+(b||0),0);
+const avg=(g,w)=>{const T=tot(w);return g.length&&T?Math.round(g.reduce((a,p)=>a+pres(p),0)/(g.length*T)*100):0};
+const byP=(a,b)=>pres(b)-pres(a)||lows(a)-lows(b)||a.name.localeCompare(b.name,'pt');
+const SORTS={cls:byP,pdesc:byP,pasc:(a,b)=>pres(a)-pres(b)||lows(b)-lows(a)||a.name.localeCompare(b.name,'pt'),low:(a,b)=>lows(b)-lows(a)||byP(a,b),name:(a,b)=>a.name.localeCompare(b.name,'pt')};
+const allClasses=()=>{const s=new Set(S.classes);S.weeks.forEach(w=>w.players.forEach(p=>s.add(p.cls)));return[...s]};
+const clsOrder=w=>allClasses().filter(c=>w.players.some(p=>p.cls===c));
+const matchCls=v=>{const n=norm(v);return allClasses().find(c=>norm(c)===n)||titleCase(v)};
+const monday=()=>{const d=new Date();d.setDate(d.getDate()-(d.getDay()+6)%7);return 'Semana de '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')};
+const uniqLabel=l=>{let n=l,i=2;while(S.weeks.some(w=>w.label===n))n=`${l} (${i++})`;return n};
+
+document.getElementById('root').innerHTML=`
+<header class="hero band"><div class="hwrap">
+ <div class="ttl"><input id="gname" class="gname" aria-label="Título da página" maxlength="80">
+  <div class="sub"><select id="wk" class="wsel" aria-label="Semana"></select><button class="hbtn" data-a="week">Editar semana</button><button class="hbtn" data-a="newweek">+ Nova semana</button></div>
+  <p id="meta" class="meta"></p></div>
+ <div class="acts"><button class="hbtn" data-a="undo" id="bUndo">Desfazer</button><button class="hbtn" data-a="import">Importar texto</button><button class="hbtn" data-a="export">Exportar</button><button class="hbtn pri" data-a="save" id="bSave">Salvar</button><p id="st" class="st" aria-live="polite"></p></div>
+</div></header>
+<main>
+ <section class="kpis" id="kpis" aria-label="Resumo da semana"></section>
+ <div class="tools">
+  <input id="q" class="in" type="search" placeholder="Buscar jogador" aria-label="Buscar jogador">
+  <select id="fc" class="in" aria-label="Filtrar por classe"></select>
+  <div class="chips" id="chips"></div>
+  <select id="so" class="in" aria-label="Ordenar"><option value="cls">Agrupar por classe</option><option value="pdesc">Maior presença</option><option value="pasc">Menor presença</option><option value="low">Mais baixos</option><option value="name">Nome (A–Z)</option></select>
+  <button class="btn pri" data-a="add">+ Jogador</button>
+ </div>
+ <p class="hint">Clique numa bolinha para marcar presença até aquela raid · clique no dia para marcar ou limpar todas · − / + ajusta os alertas de baixo · Ctrl+Z desfaz</p>
+ <div class="layout"><div id="list"></div><aside id="side" aria-label="Análise"></aside></div>
+</main>
+<div id="ov" class="ov" hidden><div class="dlg" role="dialog" aria-modal="true" id="dlg"></div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<datalist id="dcls"></datalist>`;
+
+let tt;
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3200)}
+
+function rowHTML(p,w){
+ const c=ccol(p.cls),P=pres(p),T=tot(w),L=lows(p),pc=T?Math.round(P/T*100):0;
+ const days=w.days.map((d,di)=>{
+  const a=p.a[di]||0,l=p.l[di]||0;let pips='';
+  for(let i=0;i<d.m;i++)pips+=`<button class="pip${i<a?' on':''}" data-a="pip" data-d="${di}" data-i="${i}" aria-label="${esc(d.n)}, raid ${i+1}" aria-pressed="${i<a}"></button>`;
+  return `<div class="day${a===0?' zero':''}"><button class="dn" data-a="dayall" data-d="${di}" title="Marcar ou limpar todas de ${esc(d.n)}">${esc(d.n)} <b>${a}/${d.m}</b></button><div class="pips">${pips}</div><div class="lw${l?' has':''}"><button data-a="lowm" data-d="${di}" aria-label="Menos um baixo em ${esc(d.n)}">−</button><span>baixo ${l}</span><button data-a="lowp" data-d="${di}" aria-label="Mais um baixo em ${esc(d.n)}">+</button></div></div>`}).join('');
+ return `<div class="row${L?' warn':''}" data-id="${esc(p.id)}" style="--c:${c}"><div class="who"><input class="nm" value="${esc(p.name)}" aria-label="Nome do jogador" maxlength="40"><span class="cl"><span class="sw"></span>${esc(p.cls)}</span></div><div class="days">${days}</div><div class="sum"><b class="${pc===100?'full':pc<50?'bad':''}">${pc}%</b><small>${P}/${T} raids</small><span class="meter"><i style="width:${pc}%"></i></span>${L?`<span class="badge">Baixo ${L}×</span>`:''}</div><button class="more" data-a="edit" aria-label="Editar ${esc(p.name)}">⋯</button></div>`;
+}
+function shown(w){
+ const T=tot(w),q=norm(ui.q);
+ return w.players.filter(p=>(!q||norm(p.name).includes(q))&&(!ui.cls||p.cls===ui.cls)&&(ui.flt==='all'||(ui.flt==='warn'&&lows(p)>0)||(ui.flt==='miss'&&pres(p)<T)||(ui.flt==='full'&&pres(p)===T)));
+}
+function renderList(){
+ const w=W(),el=$('#list'),ps=shown(w);
+ if(!w.players.length){el.className='';el.innerHTML=`<div class="empty"><h3>Nenhum jogador nesta semana</h3><p class="hint">Cole o relatório de presença ou adicione jogadores um a um.</p><button class="btn pri" data-a="import">Importar texto</button> <button class="btn" data-a="add">+ Jogador</button></div>`;return}
+ if(!ps.length){el.className='';el.innerHTML=`<div class="empty"><p class="hint">Ninguém encontrado com esses filtros.</p><button class="btn" data-a="clear">Limpar filtros</button></div>`;return}
+ if(ui.sort==='cls'){el.className='';el.innerHTML=clsOrder(w).map(c=>{const g=ps.filter(p=>p.cls===c);if(!g.length)return'';const all=w.players.filter(p=>p.cls===c);return `<section class="grp" style="--c:${ccol(c)}"><header><span class="sw"></span><h3>${esc(c)}</h3><span class="gm">${all.length} ${all.length>1?'jogadores':'jogador'} · ${avg(all,w)}% de presença</span><button class="btn sm" data-a="addin" data-cls="${esc(c)}">+ Jogador</button></header>${g.sort(byP).map(p=>rowHTML(p,w)).join('')}</section>`}).join('')}
+ else{el.className='flat';el.innerHTML=`<section class="grp">${[...ps].sort(SORTS[ui.sort]).map(p=>rowHTML(p,w)).join('')}</section>`}
+}
+const bar=(label,pc,val,col)=>`<div class="bar" style="--c:${col||'var(--pri)'}"><span title="${esc(label)}">${esc(label)}</span><span class="tr"><i style="width:${pc}%"></i></span><em>${val}</em></div>`;
+const pl=(p,val,cls)=>`<button class="pl" data-a="find" data-v="${esc(p.name)}" style="--c:${ccol(p.cls)}"><span class="sw"></span><span>${esc(p.name)}<small>${esc(p.cls)}</small></span><b class="${cls||''}">${val}</b></button>`;
+function renderSide(){
+ const w=W(),T=tot(w),n=w.players.length;
+ const days=w.days.map((d,i)=>{const s=w.players.reduce((a,p)=>a+(p.a[i]||0),0),mx=n*d.m,pc=mx?Math.round(s/mx*100):0;return bar(`${d.n} (${d.m} raids)`,pc,pc+'%')}).join('');
+ const cls=clsOrder(w).map(c=>{const g=w.players.filter(p=>p.cls===c);const pc=avg(g,w);return bar(`${c} (${g.length})`,pc,pc+'%',ccol(c))}).join('');
+ const warn=w.players.filter(p=>lows(p)>0).sort(SORTS.low).slice(0,8);
+ const miss=w.players.filter(p=>pres(p)<T).sort(SORTS.pasc).slice(0,8);
+ $('#side').innerHTML=`<div class="panel"><h4>Presença por dia</h4>${days||'<p class="hint">Sem dias.</p>'}</div><div class="panel"><h4>Presença por classe</h4>${cls||'<p class="hint">Sem jogadores.</p>'}</div><div class="panel"><h4>Mais alertas de baixo</h4>${warn.map(p=>pl(p,lows(p)+'×')).join('')||'<p class="hint">Nenhum alerta. Boa!</p>'}</div><div class="panel"><h4>Mais faltas</h4>${miss.map(p=>pl(p,pres(p)+'/'+T,'m')).join('')||'<p class="hint">Todo mundo em todas.</p>'}</div>`;
+}
+function renderStatus(){
+ const st=$('#st'),b=$('#bSave');
+ $('#bUndo').disabled=!hist.length;
+ if(ART){b.hidden=false;b.disabled=!dirty;b.textContent=dirty?'Salvar alterações':'Salvo';st.textContent=dirty?'Há alterações ainda não salvas':'Tudo salvo'}
+ else if(local){b.hidden=true;st.textContent='Salvando automaticamente neste navegador'}
+ else{b.disabled=true;st.textContent='Conectando…'}
+}
+function render(){
+ if(!S.weeks.some(w=>w.id===ui.wk))ui.wk=S.weeks[S.weeks.length-1].id;
+ const w=W(),T=tot(w),n=w.players.length;
+ const g=$('#gname');if(document.activeElement!==g)g.value=S.title;
+ $('#wk').innerHTML=S.weeks.map(x=>`<option value="${esc(x.id)}"${x.id===w.id?' selected':''}>${esc(x.label)}</option>`).join('');
+ $('#meta').textContent=`${n} jogadores · `+w.days.map(d=>`${d.n} ${d.m} raids`).join(' · ');
+ const P=w.players.reduce((a,p)=>a+pres(p),0),mx=n*T,pc=mx?Math.round(P/mx*100):0;
+ const full=w.players.filter(p=>pres(p)===T).length,warnN=w.players.filter(p=>lows(p)>0).length,lowT=w.players.reduce((a,p)=>a+lows(p),0);
+ $('#kpis').innerHTML=`<div class="kpi"><b>${pc}%</b><span>Presença geral</span><small>${P} de ${mx} vagas de raid</small></div><button class="kpi" data-a="flt" data-v="all"><b>${n}</b><span>Jogadores</span><small>${clsOrder(w).length} classes</small></button><button class="kpi g" data-a="flt" data-v="full"><b>${full}</b><span>Presença 100%</span><small>${n-full} com alguma falta</small></button><button class="kpi w" data-a="flt" data-v="warn"><b>${warnN}</b><span>Com alerta de baixo</span><small>${lowT} marcações no total</small></button>`;
+ const cl=clsOrder(w);if(ui.cls&&!cl.includes(ui.cls))ui.cls='';
+ $('#fc').innerHTML=`<option value="">Todas as classes</option>`+cl.map(c=>`<option${c===ui.cls?' selected':''}>${esc(c)}</option>`).join('');
+ $('#so').value=ui.sort;
+ $('#chips').innerHTML=[['all','Todos',n],['warn','Com alerta',warnN],['miss','Com falta',n-full],['full','100%',full]].map(([v,l,c])=>`<button class="chip" data-a="flt" data-v="${v}" aria-pressed="${ui.flt===v}">${l}<em>${c}</em></button>`).join('');
+ $('#dcls').innerHTML=allClasses().map(c=>`<option value="${esc(c)}">`).join('');
+ renderList();renderSide();renderStatus();
+}
+
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({base:BASE,state:S}))}catch(e){}}
+function commit(fn){hist.push(JSON.stringify(S));if(hist.length>80)hist.shift();fut=[];fn();dirty=true;persist();render()}
+function undo(){if(!hist.length)return toast('Nada para desfazer');fut.push(JSON.stringify(S));S=JSON.parse(hist.pop());dirty=true;persist();render();toast('Desfeito')}
+function redo(){if(!fut.length)return;hist.push(JSON.stringify(S));S=JSON.parse(fut.pop());dirty=true;persist();render();toast('Refeito')}
+
+function buildDoc(st){
+ const json=JSON.stringify(st).replace(/</g,'\\u003c');
+ return '<!DOCTYPE html>\n<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Presença de Raid</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style id="css">'+$('#css').textContent+'</style></head><body><div id="root"></div><script type="application/json" id="state">'+json+'<\/script><script id="app">'+$('#app').textContent+'<\/script></body></html>';
+}
+async function save(){
+ if(!ART){toast(local?'Aqui as mudanças ficam salvas neste navegador. Use Exportar para guardar um backup.':'Ainda conectando — tente de novo em instantes.');return}
+ if(!dirty)return toast('Nada novo para salvar');
+ const next=JSON.parse(JSON.stringify(S));next.savedAt=Date.now();next.cur=ui.wk;
+ const b=$('#bSave');b.disabled=true;b.textContent='Salvando…';
+ try{await ART.publish(buildDoc(next));try{localStorage.removeItem(KEY)}catch(e){}dirty=false;toast('Salvo! Recarregando com os dados novos…')}
+ catch(err){const c=err&&err.code;toast(c==='conflict'?'Outra pessoa salvou antes — a página vai recarregar com a versão dela.':(c==='not_writer'||c==='not_granted')?'Você só tem acesso de leitura. Use Exportar → backup para guardar suas mudanças.':'Não consegui salvar ('+(c||'erro')+'). Suas mudanças continuam guardadas neste navegador.')}
+ finally{renderStatus()}
+}
+async function download(name,data){
+ if(!DL)return toast('Download indisponível aqui — use o botão Copiar');
+ try{await DL.save({filename:name,data});toast('Arquivo pronto')}catch(e){const c=e&&e.code;if(c!=='declined')toast('Não deu para baixar ('+(c||'erro')+') — use o botão Copiar')}
+}
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('Copiado!')}catch(e){toast('Não consegui copiar — selecione o texto na caixa e copie')}}
+
+function toText(w){return clsOrder(w).map(c=>c.toUpperCase()+'\n'+w.players.filter(p=>p.cls===c).sort(byP).map(p=>{const L=lows(p),br=w.days.map((d,i)=>p.l[i]?`${d.n} ${p.l[i]}x`:'').filter(Boolean).join(', ');return `* ${p.name}: `+w.days.map((d,i)=>`${d.n} ${p.a[i]||0}/${d.m}`).join(' | ')+' → '+(L?`⚠️ Baixo: ${L}x (${br})`:'Baixo: 0x')}).join('\n')).join('\n\n')}
+function toCSV(w){
+ const q=v=>{let s=String(v);if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};const T=tot(w);
+ const h=['Classe','Jogador',...w.days.flatMap(d=>[`${d.n} (de ${d.m})`,`${d.n} baixo`]),'Presenças','Total raids','Presença %','Baixos'];
+ const rows=clsOrder(w).flatMap(c=>w.players.filter(p=>p.cls===c).sort(byP)).map(p=>[p.cls,p.name,...w.days.flatMap((d,i)=>[p.a[i]||0,p.l[i]||0]),pres(p),T,T?Math.round(pres(p)/T*100):0,lows(p)]);
+ return '﻿'+[h,...rows].map(r=>r.map(q).join(';')).join('\r\n');
+}
+function parseTxt(t){
+ let cls='',days=null;const players=[],classes=[];
+ for(const raw of String(t).split(/\r?\n/)){
+  const line=raw.trim();if(!line)continue;
+  const m=line.match(/^[*\-•]\s*([^:]+):\s*(.+)$/);
+  if(!m){cls=titleCase(line.replace(/[:\-–\s]+$/,''));classes.push(cls);continue}
+  const name=m[1].trim(),[left,right='']=m[2].split('→');
+  const ds=[...left.matchAll(/([^\s|\d][^|\d]*?)\s*(\d+)\s*\/\s*(\d+)/g)].map(x=>({n:x[1].trim(),a:+x[2],m:+x[3]}));
+  if(!ds.length)continue;
+  if(!days)days=ds.map(d=>({n:d.n.slice(0,12),m:Math.max(1,Math.min(20,d.m))}));
+  const a=days.map(d=>{const f=ds.find(z=>norm(z.n)===norm(d.n));return f?Math.min(f.a,d.m):0}),l=days.map(()=>0);
+  const par=right.match(/\(([^)]*)\)/);
+  if(par)for(const x of par[1].matchAll(/([^\s,\d]+)\s*(\d+)\s*x/gi)){const i=days.findIndex(d=>norm(d.n)===norm(x[1]));if(i>=0)l[i]=Math.min(99,+x[2])}
+  else{const tm=right.match(/(\d+)\s*x/i);if(tm&&+tm[1]>0)l[0]=Math.min(99,+tm[1])}
+  players.push({id:uid(),name:name.slice(0,40),cls:cls||'Sem classe',a,l});
+ }
+ return days&&players.length?{days,players,classes}:null;
+}
+function clean(o){
+ if(!o||!Array.isArray(o.weeks)||!o.weeks.length)throw new Error('formato');
+ const num=(v,mx)=>Math.max(0,Math.min(mx,Math.round(+v||0)));
+ const weeks=o.weeks.map(w=>{const days=(Array.isArray(w.days)?w.days:[]).map(d=>({n:String(d.n||'Dia').slice(0,12),m:num(d.m,20)||1}));return{id:String(w.id||uid()),label:String(w.label||'Semana').slice(0,60),days,players:(Array.isArray(w.players)?w.players:[]).map(p=>({id:String(p.id||uid()),name:String(p.name||'?').slice(0,40),cls:String(p.cls||'Sem classe').slice(0,40),a:days.map((d,i)=>num((p.a||[])[i],d.m)),l:days.map((d,i)=>num((p.l||[])[i],99))}))}}).filter(w=>w.days.length);
+ if(!weeks.length)throw new Error('formato');
+ return{title:String(o.title||'Presença de Raid').slice(0,80),savedAt:S.savedAt,cur:weeks.some(w=>w.id===o.cur)?String(o.cur):weeks[weeks.length-1].id,classes:Array.isArray(o.classes)?o.classes.map(String):[],weeks};
+}
+
+let lastF=null;
+function openDlg(html,init){lastF=document.activeElement;const d=$('#dlg');d.innerHTML=html;$('#ov').hidden=false;init&&init(d);const f=d.querySelector('input:not([type=radio]):not([type=checkbox]):not([type=file]),textarea');(f||d.querySelector('.pri')||d).focus()}
+function closeDlg(){$('#ov').hidden=true;$('#dlg').innerHTML='';if(lastF&&document.contains(lastF))lastF.focus()}
+$('#ov').addEventListener('mousedown',e=>{if(e.target.id==='ov')closeDlg()});
+
+function playerDlg(p,cls){
+ const w=W();
+ openDlg(`<h2>${p?'Editar jogador':'Novo jogador'}</h2><label class="fld">Nome<input class="in" id="pn" value="${esc(p?p.name:'')}" maxlength="40" autocomplete="off"></label><label class="fld">Classe<input class="in" id="pc" list="dcls" value="${esc(p?p.cls:(cls||''))}" maxlength="40" autocomplete="off" placeholder="Escolha ou digite uma nova"></label>${p?'':`<label class="opt"><input type="checkbox" id="pf"> Já marcar presença em todas as raids da semana</label>`}<div class="dact">${p?'<button class="btn dng" id="pdel">Remover</button><span class="sp"></span>':''}<button class="btn" data-a="close">Cancelar</button><button class="btn pri" id="pok">${p?'Salvar':'Adicionar'}</button></div>`,r=>{
+  const ok=()=>{const n=$('#pn',r).value.trim(),c=$('#pc',r).value.trim();if(!n)return toast('Coloque um nome');if(!c)return toast('Escolha a classe');const cc=matchCls(c);
+   commit(()=>{if(!S.classes.includes(cc))S.classes.push(cc);if(p){p.name=n;p.cls=cc}else{const f=$('#pf',r).checked;w.players.push({id:uid(),name:n,cls:cc,a:w.days.map(d=>f?d.m:0),l:w.days.map(()=>0)})}});closeDlg();toast(p?'Jogador atualizado':`${n} adicionado em ${cc}`)};
+  $('#pok',r).onclick=ok;r.querySelectorAll('#pn,#pc').forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')ok()}));
+  if(p)$('#pdel',r).onclick=e=>{const b=e.currentTarget;if(!b.dataset.ok){b.dataset.ok=1;b.textContent='Clique de novo para remover';return}commit(()=>{w.players=w.players.filter(x=>x.id!==p.id)});closeDlg();toast(`${p.name} removido — Ctrl+Z desfaz`)};
+ });
+}
+function weekDlg(){
+ const w=W();
+ const dr=(d,i)=>`<div class="drow" data-i="${i}"><input class="in dn2" value="${esc(d.n)}" aria-label="Nome do dia" maxlength="12"><input class="in dm" type="number" min="1" max="20" value="${d.m}" aria-label="Raids no dia"><button class="btn sm drm" type="button">Remover</button></div>`;
+ openDlg(`<h2>Editar semana</h2><label class="fld">Nome da semana<input class="in" id="wl" value="${esc(w.label)}" maxlength="60"></label><h3>Dias de raid</h3><p class="hint">Nome do dia e quantas raids teve. Remover um dia apaga as marcações dele.</p><div id="dl">${w.days.map(dr).join('')}</div><button class="btn" id="dadd" type="button">+ Adicionar dia</button><div class="dact"><button class="btn dng" id="wdel"${S.weeks.length<2?' disabled title="Precisa ter pelo menos uma semana"':''}>Excluir semana</button><span class="sp"></span><button class="btn" data-a="close">Cancelar</button><button class="btn pri" id="wok">Aplicar</button></div>`,r=>{
+  $('#dl',r).addEventListener('click',e=>{const b=e.target.closest('.drm');if(b)b.closest('.drow').remove()});
+  $('#dadd',r).onclick=()=>{const used=[...r.querySelectorAll('.dn2')].map(x=>x.value);const n=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'].find(x=>!used.includes(x))||'Dia';$('#dl',r).insertAdjacentHTML('beforeend',dr({n,m:4},-1))};
+  $('#wdel',r).onclick=e=>{const b=e.currentTarget;if(!b.dataset.ok){b.dataset.ok=1;b.textContent='Clique de novo para excluir';return}commit(()=>{S.weeks=S.weeks.filter(x=>x.id!==w.id);if(S.cur===w.id)S.cur=S.weeks[S.weeks.length-1].id});closeDlg();toast('Semana excluída — Ctrl+Z desfaz')};
+  $('#wok',r).onclick=()=>{const rows=[...r.querySelectorAll('.drow')];if(!rows.length)return toast('Precisa de pelo menos um dia');
+   const nd=rows.map(x=>({oi:+x.dataset.i,n:$('.dn2',x).value.trim().slice(0,12)||'Dia',m:Math.max(1,Math.min(20,Math.round(+$('.dm',x).value||1)))}));
+   commit(()=>{w.label=$('#wl',r).value.trim()||w.label;w.players.forEach(p=>{p.a=nd.map(d=>d.oi>=0?Math.min(p.a[d.oi]||0,d.m):0);p.l=nd.map(d=>d.oi>=0?(p.l[d.oi]||0):0)});w.days=nd.map(({n,m})=>({n,m}))});closeDlg();toast('Semana atualizada')};
+ });
+}
+function newWeekDlg(){
+ const w=W();
+ openDlg(`<h2>Nova semana</h2><label class="fld">Nome<input class="in" id="nl" value="${esc(uniqLabel(monday()))}" maxlength="60"></label><label class="opt"><input type="radio" name="nm" value="copy" checked> Mesmo elenco e mesmos dias de “${esc(w.label)}”, com presença zerada</label><label class="opt"><input type="radio" name="nm" value="empty"> Semana vazia (mesmos dias, sem jogadores)</label><div class="dact"><button class="btn" data-a="close">Cancelar</button><button class="btn pri" id="nok">Criar semana</button></div>`,r=>{
+  $('#nok',r).onclick=()=>{const copyR=$('input[name=nm]:checked',r).value==='copy',id=uid();
+   commit(()=>{S.weeks.push({id,label:$('#nl',r).value.trim()||monday(),days:w.days.map(d=>({...d})),players:copyR?w.players.map(p=>({id:uid(),name:p.name,cls:p.cls,a:w.days.map(()=>0),l:w.days.map(()=>0)})):[]});S.cur=id;ui.wk=id});closeDlg();toast('Semana criada')};
+ });
+}
+function importDlg(){
+ const w=W();
+ openDlg(`<h2>Importar texto de presença</h2><p class="hint">Cole o relatório no mesmo formato: a CLASSE numa linha e depois “* Nome: Seg 6/6 | Ter 6/6 → Baixo: 0x”.</p><textarea class="in" id="it" aria-label="Texto de presença" placeholder="BRUXO&#10;* Solaron: Seg 6/6 | Ter 6/6 | Qua 4/4 → Baixo: 0x"></textarea><p class="hint" id="ip">Cole o texto acima.</p><label class="opt"><input type="radio" name="im" value="new" checked> Criar uma semana nova</label><label class="opt"><input type="radio" name="im" value="rep"> Substituir os dados de “${esc(w.label)}”</label><label class="fld" id="ilw">Nome da nova semana<input class="in" id="il" value="${esc(uniqLabel(monday()))}" maxlength="60"></label><div class="dact"><button class="btn" data-a="close">Cancelar</button><button class="btn pri" id="iok" disabled>Importar</button></div>`,r=>{
+  let res=null;
+  $('#it',r).addEventListener('input',e=>{res=parseTxt(e.target.value);$('#iok',r).disabled=!res;$('#ip',r).textContent=res?`Reconhecidos ${res.players.length} jogadores em ${new Set(res.players.map(p=>p.cls)).size} classes · `+res.days.map(d=>`${d.n} ${d.m} raids`).join(' · '):'Ainda não reconheci nenhum jogador nesse texto.'});
+  r.querySelectorAll('input[name=im]').forEach(x=>x.addEventListener('change',()=>{$('#ilw',r).hidden=$('input[name=im]:checked',r).value!=='new'}));
+  $('#iok',r).onclick=()=>{if(!res)return;const rep=$('input[name=im]:checked',r).value==='rep';
+   commit(()=>{res.classes.forEach(c=>{if(!S.classes.includes(c))S.classes.push(c)});if(rep){w.days=res.days;w.players=res.players}else{const id=uid();S.weeks.push({id,label:$('#il',r).value.trim()||monday(),days:res.days,players:res.players});S.cur=id;ui.wk=id}});
+   closeDlg();toast(`Importados ${res.players.length} jogadores`)};
+ });
+}
+function exportDlg(){
+ const w=W(),txt=toText(w);
+ openDlg(`<h2>Exportar “${esc(w.label)}”</h2><label class="fld">Texto no formato do relatório (pra colar no Discord ou WhatsApp)<textarea class="in" id="xt" readonly>${esc(txt)}</textarea></label><div class="dact" style="justify-content:flex-start;margin-top:0"><button class="btn pri" id="xc">Copiar texto</button><button class="btn" id="xcsv"${DL?'':' hidden'}>Baixar planilha (.csv)</button><button class="btn" id="xjson"${DL?'':' hidden'}>Baixar backup (.json)</button><button class="btn" id="xcj">Copiar backup</button></div><h3>Restaurar backup</h3><p class="hint">Escolha um arquivo .json exportado daqui. Substitui todas as semanas (Ctrl+Z desfaz).</p><input type="file" id="xf" accept=".json,application/json" class="in" style="padding-top:9px;width:100%"><div class="dact"><button class="btn" data-a="close">Fechar</button></div>`,r=>{
+  const stamp=new Date().toISOString().slice(0,10);
+  $('#xc',r).onclick=()=>copy(txt);
+  $('#xcsv',r).onclick=()=>download(`presenca-${stamp}.csv`,toCSV(w));
+  $('#xjson',r).onclick=()=>download(`presenca-backup-${stamp}.json`,JSON.stringify(S,null,1));
+  $('#xcj',r).onclick=()=>copy(JSON.stringify(S));
+  $('#xf',r).onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=clean(JSON.parse(await f.text()));commit(()=>{S=o;ui.wk=o.cur});closeDlg();toast('Backup restaurado')}catch(err){toast('Esse arquivo não parece um backup válido')}};
+ });
+}
+
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-a]');if(!b)return;
+ const a=b.dataset.a,row=b.closest('.row'),w=W(),p=row&&w.players.find(x=>x.id===row.dataset.id),d=+b.dataset.d,i=+b.dataset.i;
+ const refocus=sel=>{if(e.detail===0){const el=document.querySelector(sel);el&&el.focus()}};
+ const rs=row?`.row[data-id="${CSS.escape(row.dataset.id)}"] [data-a="${a}"][data-d="${d}"]`:'';
+ switch(a){
+  case'pip':if(!p)return;commit(()=>{p.a[d]=p.a[d]===i+1?i:i+1});refocus(rs+`[data-i="${i}"]`);break;
+  case'dayall':if(!p)return;commit(()=>{p.a[d]=(p.a[d]||0)<w.days[d].m?w.days[d].m:0});refocus(rs);break;
+  case'lowp':if(!p)return;commit(()=>{p.l[d]=Math.min(99,(p.l[d]||0)+1)});refocus(rs);break;
+  case'lowm':if(!p||!p.l[d])return;commit(()=>{p.l[d]--});refocus(rs);break;
+  case'edit':if(p)playerDlg(p);break;
+  case'add':playerDlg(null,ui.cls);break;
+  case'addin':playerDlg(null,b.dataset.cls);break;
+  case'undo':undo();break;
+  case'save':save();break;
+  case'import':importDlg();break;
+  case'export':exportDlg();break;
+  case'week':weekDlg();break;
+  case'newweek':newWeekDlg();break;
+  case'close':closeDlg();break;
+  case'flt':ui.flt=b.dataset.v;render();break;
+  case'clear':ui.q='';ui.cls='';ui.flt='all';$('#q').value='';render();break;
+  case'find':ui.q=b.dataset.v;$('#q').value=ui.q;ui.cls='';ui.flt='all';render();$('#list').scrollIntoView({behavior:'smooth',block:'start'});break;
+ }
+});
+document.addEventListener('change',e=>{
+ const t=e.target;
+ if(t.matches('.nm')){const row=t.closest('.row'),p=W().players.find(x=>x.id===row.dataset.id),v=t.value.trim();if(p&&v&&v!==p.name)commit(()=>{p.name=v.slice(0,40)});else if(p)t.value=p.name}
+ else if(t.id==='gname'){const v=t.value.trim()||'Presença de Raid';if(v!==S.title)commit(()=>{S.title=v})}
+ else if(t.id==='wk'){ui.wk=t.value;render()}
+ else if(t.id==='fc'){ui.cls=t.value;render()}
+ else if(t.id==='so'){ui.sort=t.value;render()}
+});
+$('#q').addEventListener('input',e=>{ui.q=e.target.value;renderList()});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&!$('#ov').hidden){closeDlg();return}
+ if(e.key==='Enter'&&e.target.matches('.nm,.gname')){e.target.blur();return}
+ if(!(e.ctrlKey||e.metaKey))return;
+ const k=e.key.toLowerCase(),typing=e.target.matches('input,textarea');
+ if(k==='s'){e.preventDefault();save()}
+ else if(k==='z'&&!typing&&$('#ov').hidden){e.preventDefault();e.shiftKey?redo():undo()}
+ else if(k==='y'&&!typing&&$('#ov').hidden){e.preventDefault();redo()}
+});
+
+render();
+const C=window.claude;
+if(C&&typeof C.use==='function'){
+ C.use('artifact').then(x=>{ART=x;local=!x;renderStatus()}).catch(()=>{local=true;renderStatus()});
+ C.use('downloads').then(x=>{DL=x}).catch(()=>{});
+}else{local=true;renderStatus()}
+}
+</script></body></html>
