@@ -67,6 +67,7 @@ A classe fica numa linha sozinha (maiúsculas ou não). Cada jogador começa com
 ```
 Qu-rum/
 ├── index.html    # app completo (HTML + CSS + JS + estado inicial)
+├── icons/        # ícones PNG das classes (um por classe conhecida)
 └── vercel.json   # config pra servir estático na Vercel
 ```
 
